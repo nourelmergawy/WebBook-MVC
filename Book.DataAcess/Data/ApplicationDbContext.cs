@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebBook.Models;
+﻿using Book.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace WebBook.Data
+namespace Book.DataAcess.Data
 {
     public class ApplicationDbContext :DbContext
     {

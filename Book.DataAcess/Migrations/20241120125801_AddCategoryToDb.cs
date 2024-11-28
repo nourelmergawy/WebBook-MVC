@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace WebBook.Migrations
+namespace Book.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoryToDb : Migration

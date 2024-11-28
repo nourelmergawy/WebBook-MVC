@@ -1,6 +1,5 @@
+using Book.DataAcess.Data;
 using Microsoft.EntityFrameworkCore;
-using WebBook.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
