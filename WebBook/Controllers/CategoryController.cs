@@ -1,4 +1,6 @@
 ﻿using Book.DataAcess.Data;
+using Book.DataAcess.Repository;
+using Book.DataAcess.Repository.IRepository;
 using Book.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,14 +8,14 @@ namespace WebBook.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _unitOfWork.Category.GetAll().ToList();
             return View(objCategoryList);
         }
         public IActionResult Create()
@@ -30,8 +32,8 @@ namespace WebBook.Controllers
                 ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
             }
             if (ModelState.IsValid){
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Add(obj);
+                _unitOfWork.Save();
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -43,7 +45,7 @@ namespace WebBook.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _db.Categories.FirstOrDefault(u => u.Id == Id);
+            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == Id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -58,8 +60,8 @@ namespace WebBook.Controllers
 
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Update(obj);
+                _unitOfWork.Save();
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -71,7 +73,7 @@ namespace WebBook.Controllers
             {
                 return NotFound();
             }
-            Category? categoryFromDb = _db.Categories.FirstOrDefault(u => u.Id == Id);
+            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == Id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -83,13 +85,13 @@ namespace WebBook.Controllers
         [HttpPost,ActionName("Delete")]
         public IActionResult DeletePost(int? Id)
         {
-            Category? obj = _db.Categories.Find(Id);
+            Category? obj = _unitOfWork.Category.Get(u => u.Id == Id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.Save();
             return RedirectToAction("Index", "Category");
 
         }
